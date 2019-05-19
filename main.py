@@ -1,5 +1,6 @@
 from __future__ import print_function
 from collections import namedtuple
+from binascii import unhexlify
 import sys
 import numpy as np
 import pickle
@@ -53,13 +54,15 @@ def download_file(service_docs, service_files, file_name):
                     break_=True
                 itr += 1
 
-    #newFile = open('downloads/'+file_name, "wb")
+    newFile = open('downloads/'+file_name, "wb")
     for i in range(len(to_download_drive_files_ordered)):
         print('Name:', to_download_drive_files_ordered[i].name, 'ID: ', to_download_drive_files_ordered[i].id, 'Type:', to_download_drive_files_ordered[i].type, 'Count:', to_download_drive_files_ordered[i].count)
 
         document = service_docs.documents().get(documentId=str(to_download_drive_files_ordered[i].id)).execute()
-
-        #print(document.get('body').get('content')[1].get('paragraph').get('elements')[0].get('textRun').get('content'))
+        content = document.get('body').get('content')[1].get('paragraph').get('elements')[0].get('textRun').get('content')
+        print(content)
+        newFile.write(bytearray.fromhex(content[:-1]))
+        #print()
 
 def upload_file(service, file):
     chunk_it = 0
