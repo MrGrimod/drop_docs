@@ -1,25 +1,55 @@
 from __future__ import print_function
 from collections import namedtuple
 from binascii import unhexlify
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 import sys
+import getopt, sys
 import numpy as np
 import pickle
 import binascii
 import os.path
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
 
 
 CHUNK_SIZE = 500000 # 1 = one byte; 500000 bytes = 500 kb
 
 def main():
-    file = open(sys.argv[1], 'rb')
+
     service_docs = google_docs_api_login()
     service_files = google_files_api_login()
 
-    #upload_file(service_docs, file)
-    download_file(service_docs, service_files, file)
+    unixOptions = "hud"
+
+    gnuOptions = ["help", "upload", "download"]
+
+    # read commandline arguments, first
+    fullCmdArguments = sys.argv
+
+    # - further arguments
+    argumentList = fullCmdArguments[1:]
+
+    try:
+        arguments, values = getopt.getopt(argumentList, unixOptions, gnuOptions)
+    except getopt.error as err:
+        # output error, and return with an error code
+        print (str(err))
+        sys.exit(2)
+
+    # evaluate given options
+    for currentArgument, currentValue in arguments:
+        if currentArgument in ("-d", "--download"):
+            print ("Download...")
+            file = open(sys.argv[2], 'rb')
+            download_file(service_docs, service_files, file)
+        elif currentArgument in ("-u", "--upload"):
+            print ("Uploading...")
+            file = open(sys.argv[2], 'rb')
+            upload_file(service_docs, file)
+        elif currentArgument in ("-help", "--help"):
+            print ("Download -d <file>")
+            print ("Upload -u <file>")
+
 
 
 def download_file(service_docs, service_files, file_name):
@@ -60,9 +90,7 @@ def download_file(service_docs, service_files, file_name):
 
         document = service_docs.documents().get(documentId=str(to_download_drive_files_ordered[i].id)).execute()
         content = document.get('body').get('content')[1].get('paragraph').get('elements')[0].get('textRun').get('content')
-        print(content)
         newFile.write(bytearray.fromhex(content[:-1]))
-        #print()
 
 def upload_file(service, file):
     chunk_it = 0
