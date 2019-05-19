@@ -7,6 +7,14 @@ The uploading file is split into chunks and the binary data gets converted to he
 
 So accordiung to Google you can save up to **500kb** in one Google Document, with a document limit of **5000**.
 
+## Usage
+
+Upload a file: 
+`python main.py -u <file>`
+
+Download a file:
+`python main.py -d <file>`
+
 ## Setup
 
 To get started follow the [Google Docs API instructions])(https://developers.google.com/docs/api/quickstart/python) and [Google Drive API instructions](https://developers.google.com/drive/api/v3/quickstart/python),then download the credentials.json(same for google docs and drive) file and move it in the project folder.
