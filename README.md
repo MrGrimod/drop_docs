@@ -13,4 +13,4 @@ To get started follow the [Google Docs API instructions])(https://developers.goo
 
 ## Video
 
-You can find a demo Video [here](https://youtu.be/XRX7pI9Cfg4)
+You can find a demo Video [here](https://youtu.be/IaiLcpHEdZ4)
